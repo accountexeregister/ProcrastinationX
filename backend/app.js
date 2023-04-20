@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require("cors");
 const { log, errorLog } = require("./utils/logger");
 
 (async() => {
@@ -11,5 +12,8 @@ const { log, errorLog } = require("./utils/logger");
 		errorLog("Failed to connect to mongodb uri, ", process.env.MONGODB_URI, error);
 	}
 })();
+
+app.use(cors());
+app.use(express.json());
 
 module.exports = app;
