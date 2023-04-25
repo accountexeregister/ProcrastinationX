@@ -5,7 +5,7 @@ import SettingsContext from "./SettingsContext";
 
 const Main = () => {
 
-    const [settingsVisible, setSettingsVisible] = useState(true);
+    const [settingsVisible, setSettingsVisible] = useState(false);
     const [workMinutes, setWorkMinutes] = useState(45);
     const [breakMinutes, setBreakMinutes] = useState(15);
 
@@ -16,6 +16,8 @@ const Main = () => {
                 breakMinutes,
                 setWorkMinutes,
                 setBreakMinutes,
+                settingsVisible,
+                setSettingsVisible,
             }}>
                 {settingsVisible ? <Settings/> : <Timer/>}
             </SettingsContext.Provider>
