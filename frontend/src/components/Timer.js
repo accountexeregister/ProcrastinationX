@@ -7,7 +7,7 @@ import { useState, useEffect, useContext, useRef } from 'react';
 import SettingsContext from './SettingsContext';
 
 const Timer = () => {
-    const [isPaused, setIsPaused] = useState(false);
+    const [isPaused, setIsPaused] = useState(true);
     const [mode, setMode] = useState("study"); // study/break/null
     const [timeLeft, setTimeLeft] = useState(0); // time in seconds
     const settings = useContext(SettingsContext);
@@ -17,7 +17,8 @@ const Timer = () => {
     const modeRef = useRef(mode);
 
     const startTimer = () => {
-        setTimeLeft(settings.workMinutes * 60);
+        timeLeftRef.current = settings.workMinutes * 60;
+        setTimeLeft(timeLeftRef.current);
     }
 
     const switchMode = () => {
@@ -65,14 +66,16 @@ const Timer = () => {
                 text={`${minutes}:${seconds}`}
                 styles={buildStyles({
                     // Colors
-                    pathColor: mode === "study" ? "green" : "red",
-                    textColor: mode === "study" ? "green" : "red",
+                    pathColor: mode === "study" ? "red" : "green",
+                    textColor: mode === "study" ? "red" : "green",
                     trailColor: '#d6d6d6',
                     backgroundColor: '#3e98c7',
                 })}
             />;
-            <div style={{marginTop: "20px;"}}>
-                {isPaused ? <PlayButton /> : <PauseButton />}
+            <div style={{marginTop: "20px"}}>
+                {isPaused 
+                ? <PlayButton onClick={() => { setIsPaused(false); isPausedRef.current = false; }}/> 
+                : <PauseButton onClick={() => { setIsPaused(true); isPausedRef.current = true; }} />}
             </div>
             <div style={{marginTop: "20px"}}>
                 <SettingsButton onClick={() => settings.setSettingsVisible(true)}/>
