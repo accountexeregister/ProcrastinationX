@@ -1,9 +1,13 @@
+import Settings from "./Settings";
 import Timer from "./Timer";
+import { useState } from "react";
 
 const Main = () => {
+
+    const [settingsVisible, setSettingsVisible] = useState(true);
     return (
         <main>
-            <Timer/>
+            {settingsVisible ? <Settings/> : <Timer/>}
         </main>
     )
 }
