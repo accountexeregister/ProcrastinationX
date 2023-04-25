@@ -3,6 +3,7 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import Login from './components/Login';
 import Register from './components/Register';
+import Main from './components/Main';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -25,6 +26,7 @@ const App = () => {
     return (
       <>
       {user && <div>Logged in as {user.username}</div>}
+      <Main />
       <button onClick={() => setIsLogin(true)}>
         Login
       </button>
