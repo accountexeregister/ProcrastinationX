@@ -2,6 +2,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import PauseButton from './PauseButton';
 import PlayButton from './PlayButton';
+import SettingsButton from './SettingsButton';
 
 const Timer = () => {
     return (
@@ -10,6 +11,9 @@ const Timer = () => {
             <div style={{marginTop: "20px;"}}>
                 <PlayButton />
                 <PauseButton />
+            </div>
+            <div style={{marginTop: "20px"}}>
+                <SettingsButton/>
             </div>
         </div>
     )
