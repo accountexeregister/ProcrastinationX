@@ -71,7 +71,7 @@ const Timer = () => {
                     trailColor: '#d6d6d6',
                     backgroundColor: '#3e98c7',
                 })}
-            />;
+            />
             <div style={{marginTop: "20px"}}>
                 {isPaused 
                 ? <PlayButton onClick={() => { setIsPaused(false); isPausedRef.current = false; }}/> 
