@@ -2,7 +2,7 @@ import loginService from "../services/login";
 import { useState } from "react";
 import LoginNotification from "../Notifications/LoginNotification";
 
-const Login = ({ setUser }) => {
+const Login = ({ setUser, setIsLogin }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState(null);
@@ -64,6 +64,9 @@ const Login = ({ setUser }) => {
             </div>
             <button type="submit">login</button>
             </form>
+            <button onClick={() => setIsLogin(false)}>
+              Back
+            </button>
         </>
     )
 }

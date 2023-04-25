@@ -18,9 +18,9 @@ const App = () => {
   }, []);
 
   if (isLogin) {
-    return <Login setUser={setUser}/>;
+    return <Login setUser={setUser} setIsLogin={setIsLogin}/>;
   } else if (isRegister) {
-    return <Register/>;
+    return <Register setIsRegister={setIsRegister}/>;
   } else {
     return (
       <>

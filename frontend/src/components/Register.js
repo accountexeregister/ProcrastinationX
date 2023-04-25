@@ -2,7 +2,7 @@ import { useState } from "react";
 import LoginNotification from "../Notifications/LoginNotification";
 import registerService from "../services/register";
 
-const Register = () => {
+const Register = ({ setIsRegister }) => {
     const [username, setUsername] = useState("");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
@@ -72,6 +72,9 @@ const Register = () => {
             </div>
             <button type="submit">Register</button>
             </form>
+            <button onClick={() => setIsRegister(false)}>
+                Back
+            </button>
         </>
     )
 }
