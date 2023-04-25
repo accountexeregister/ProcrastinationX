@@ -3,17 +3,76 @@ import 'react-circular-progressbar/dist/styles.css';
 import PauseButton from './PauseButton';
 import PlayButton from './PlayButton';
 import SettingsButton from './SettingsButton';
-import { useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import SettingsContext from './SettingsContext';
 
 const Timer = () => {
+    const [isPaused, setIsPaused] = useState(false);
+    const [mode, setMode] = useState("study"); // study/break/null
+    const [timeLeft, setTimeLeft] = useState(0); // time in seconds
     const settings = useContext(SettingsContext);
+
+    const timeLeftRef = useRef(timeLeft);
+    const isPausedRef = useRef(isPaused);
+    const modeRef = useRef(mode);
+
+    const startTimer = () => {
+        setTimeLeft(settings.workMinutes * 60);
+    }
+
+    const switchMode = () => {
+        const nextMode = modeRef.current === "study" ? "break" : "study";
+        const nextTime = nextMode === "study" ? settings.workMinutes * 60 : settings.breakMinutes * 60;
+        setMode(nextMode);
+        modeRef.current = nextMode;
+        setTimeLeft(nextTime);
+        timeLeftRef.current = nextTime;
+    }
+
+    const tick = () => {
+        timeLeftRef.current--;
+        setTimeLeft(timeLeftRef.current);
+    }
+
+    useEffect(() => {
+        startTimer();
+        const intervalFunc = setInterval(() => {
+            if (isPausedRef.current) {
+                return;
+            }
+
+            if (timeLeftRef.current === 0) {
+                return switchMode();
+            }
+
+            tick();
+        }, 1000)
+        return () => clearInterval(intervalFunc);
+    }, [settings]);
+
+    const totalTime = mode === "study" ? settings.workMinutes * 60 : settings.breakMinutes * 60; // in seconds
+    const percentage = Math.round(timeLeft / totalTime * 100)
+
+    const minutes = Math.floor(timeLeft / 60); // ex: 44.8 -> 44
+    let seconds = timeLeft % 60;
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
     return (
         <div>
-            <CircularProgressbar value={50} text={"50%"}/>;
+            <CircularProgressbar 
+                value={percentage} 
+                text={`${minutes}:${seconds}`}
+                styles={buildStyles({
+                    // Colors
+                    pathColor: mode === "study" ? "green" : "red",
+                    textColor: mode === "study" ? "green" : "red",
+                    trailColor: '#d6d6d6',
+                    backgroundColor: '#3e98c7',
+                })}
+            />;
             <div style={{marginTop: "20px;"}}>
-                <PlayButton />
-                <PauseButton />
+                {isPaused ? <PlayButton /> : <PauseButton />}
             </div>
             <div style={{marginTop: "20px"}}>
                 <SettingsButton onClick={() => settings.setSettingsVisible(true)}/>
