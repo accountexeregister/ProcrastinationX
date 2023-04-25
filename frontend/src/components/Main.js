@@ -4,7 +4,7 @@ import Timer from "./Timer";
 const Main = () => {
     return (
         <main>
-            <Timer />
+            <Timer/>
         </main>
     )
 }
