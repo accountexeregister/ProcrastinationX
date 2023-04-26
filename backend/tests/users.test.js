@@ -1,13 +1,14 @@
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const User = require("../models/user");
+const Experience = require("../models/experience");
 const api = require("./setup_test");
 const helper = require("./test_helper");
 
 describe("when there is initially one user at db", () => {
 	beforeEach(async () => {
 		await User.deleteMany({});
-  
+		await Experience.deleteMany({});
 		const passwordHash = await bcrypt.hash("sekret", 10);
 		const user = new User({ username: "root", passwordHash });
   
@@ -16,6 +17,7 @@ describe("when there is initially one user at db", () => {
   
 	test("creation succeeds with a fresh username", async () => {
 		const usersAtStart = await helper.usersInDb();
+		const experiencesAtStart = await helper.experiencesInDb();
   
 		const newUser = {
 			username: "mluukkai",
@@ -23,17 +25,35 @@ describe("when there is initially one user at db", () => {
 			password: "salainen",
 		};
   
-		await api
+		const result = await api
 			.post("/api/users")
 			.send(newUser)
 			.expect(201)
 			.expect("Content-Type", /application\/json/);
-  
+		
+		let savedUser = result.body;
 		const usersAtEnd = await helper.usersInDb();
 		expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
   
 		const usernames = usersAtEnd.map(u => u.username);
 		expect(usernames).toContain(newUser.username);
+
+		const experiencesAtEnd = await helper.experiencesInDb();
+		expect(experiencesAtEnd).toHaveLength(experiencesAtStart.length + 1);
+		expect(savedUser.experience.toString()).toBe(experiencesAtEnd[0].id);
+		expect(experiencesAtEnd[0].user.toString()).toBe(savedUser.id);
+
+		savedUser = await User.findById(savedUser.id).populate("experience");
+		const savedUserExperience = {
+			level: savedUser.experience.level,
+			currentXp: savedUser.experience.currentXp,
+			requiredXp: savedUser.experience.requiredXp
+		};
+		expect(savedUserExperience).toEqual({
+			level: 1,
+			currentXp: 0,
+			requiredXp: 300,
+		});
 	}, 50000);
   
 	test("creation fails with proper statuscode and message if username already taken", async () => {
