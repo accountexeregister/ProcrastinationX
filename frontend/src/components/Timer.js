@@ -8,7 +8,7 @@ import SettingsContext from './SettingsContext';
 
 const Timer = () => {
     const [isPaused, setIsPaused] = useState(true);
-    const [mode, setMode] = useState("study"); // study/break/null
+    const [mode, setMode] = useState("work"); // work/break/null
     const [timeLeft, setTimeLeft] = useState(0); // time in seconds
     const settings = useContext(SettingsContext);
 
@@ -17,13 +17,15 @@ const Timer = () => {
     const modeRef = useRef(mode);
 
     const startTimer = () => {
-        timeLeftRef.current = settings.workMinutes * 60;
+        timeLeftRef.current = (settings.workMinutes * 60) + settings.workSeconds;
         setTimeLeft(timeLeftRef.current);
     }
 
     const switchMode = () => {
-        const nextMode = modeRef.current === "study" ? "break" : "study";
-        const nextTime = nextMode === "study" ? settings.workMinutes * 60 : settings.breakMinutes * 60;
+        const nextMode = modeRef.current === "work" ? "break" : "work";
+        const nextTime = nextMode === "work" 
+        ? (settings.workMinutes * 60) + settings.workSeconds 
+        : (settings.breakMinutes * 60) + settings.breakSeconds;
         setMode(nextMode);
         modeRef.current = nextMode;
         setTimeLeft(nextTime);
@@ -51,8 +53,10 @@ const Timer = () => {
         return () => clearInterval(intervalFunc);
     }, [settings]);
 
-    const totalTime = mode === "study" ? settings.workMinutes * 60 : settings.breakMinutes * 60; // in seconds
-    const percentage = Math.round(timeLeft / totalTime * 100)
+    const totalTime = mode === "work" 
+    ? (settings.workMinutes * 60) + settings.workSeconds 
+    : (settings.breakMinutes * 60) + settings.breakSeconds; // in seconds
+    const percentage = Math.round(timeLeft / totalTime * 100);
 
     const minutes = Math.floor(timeLeft / 60); // ex: 44.8 -> 44
     let seconds = timeLeft % 60;
@@ -66,8 +70,8 @@ const Timer = () => {
                 text={`${minutes}:${seconds}`}
                 styles={buildStyles({
                     // Colors
-                    pathColor: mode === "study" ? "red" : "green",
-                    textColor: mode === "study" ? "red" : "green",
+                    pathColor: mode === "work" ? "red" : "green",
+                    textColor: mode === "work" ? "red" : "green",
                     trailColor: '#d6d6d6',
                     backgroundColor: '#3e98c7',
                 })}

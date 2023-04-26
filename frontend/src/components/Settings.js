@@ -6,9 +6,11 @@ import BackButton from "./BackButton";
 
 const Settings = () => {
     const settings = useContext(SettingsContext);
+    const settingsWorkSeconds = settings.workSeconds < 10 ? "0" + settings.workSeconds : settings.workSeconds; 
+    const settingsBreakSeconds = settings.breakSeconds < 10 ? "0" + settings.breakSeconds : settings.breakSeconds; 
     return (
         <div style={{textAlign: "left"}}>
-            <label>work minutes: {settings.workMinutes}:00</label>
+            <label>work minutes: {settings.workMinutes}:{settingsWorkSeconds}</label>
             <ReactSlider
                 className={"slider"}
                 thumbClassName={"thumb"}
@@ -18,7 +20,16 @@ const Settings = () => {
                 min={1}
                 max={120}
             />
-            <label>break minutes: {settings.breakMinutes}:00</label>
+            <ReactSlider
+                className={"slider"}
+                thumbClassName={"thumb"}
+                trackClassName={"track"}
+                value={settings.workSeconds}
+                onChange={newVal => settings.setWorkSeconds(newVal)}
+                min={0}
+                max={59}
+            />
+            <label>break minutes: {settings.breakMinutes}:{settingsBreakSeconds}</label>
             <ReactSlider
                 className={"slider green"}
                 thumbClassName={"thumb"}
@@ -27,6 +38,15 @@ const Settings = () => {
                 onChange={newVal => settings.setBreakMinutes(newVal)}
                 min={1}
                 max={120}
+            />
+            <ReactSlider
+                className={"slider green"}
+                thumbClassName={"thumb"}
+                trackClassName={"track"}
+                value={settings.breakSeconds}
+                onChange={newVal => settings.setBreakSeconds(newVal)}
+                min={0}
+                max={59}
             />
             <div style={{textAlign: "center", marginTop: "20px"}}>
                 <BackButton onClick={() => settings.setSettingsVisible(false)}/>
