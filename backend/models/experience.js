@@ -3,7 +3,11 @@ const mongoose = require("mongoose");
 const experienceSchema = new mongoose.Schema({
 	level: Number,
 	currentXp: Number,
-	requiredXp: Number
+	requiredXp: Number,
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User"
+	}
 });
 
 experienceSchema.set("toJSON", {
