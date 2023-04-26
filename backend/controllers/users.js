@@ -1,6 +1,7 @@
 const usersRouter = require("express").Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
+const Experience = require("../models/experience");
 
 usersRouter.post("/", async (request, response) => {
 	const { username, name, password } = request.body;
@@ -13,10 +14,21 @@ usersRouter.post("/", async (request, response) => {
 		name,
 		passwordHash,
 	});
-	const savedUser = await user.save();
-	response.status(201).json(savedUser);
 
-  
+	let savedUser = await user.save();
+
+	const experience = new Experience({
+		level: 1,
+		currentXp: 0,
+		requiredXp: 300,
+		user: savedUser._id
+	});
+
+	const savedExperience = await experience.save();
+
+	savedUser.experience = savedExperience._id;
+	savedUser = await savedUser.save();
+	response.status(201).json(savedUser);
 });
 
 usersRouter.get("/", async (request, response) => {
