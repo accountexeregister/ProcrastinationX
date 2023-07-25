@@ -35,5 +35,20 @@ usersRouter.get("/", async (request, response) => {
 	const users = await User.find({});
 	response.json(users);
 });
+
+usersRouter.delete("/logout", (request, response, next) => {
+	if (request.session) {
+	  request.session.destroy(err => {
+		if (err) {
+		  err.name = "LogOutError"
+		  next(err)
+		} else {
+		  response.send("Logout successful");
+		}
+	  });
+	} else {
+	  response.end();
+	}
+  })
   
 module.exports = usersRouter;

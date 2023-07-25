@@ -6,6 +6,7 @@ const cors = require("cors");
 const { log, errorLog } = require("./utils/logger");
 require("express-async-errors");
 const middleware = require("./utils/middleware");
+let session = require("express-session");
 const usersRouter = require("./controllers/users");
 const loginRouter = require("./controllers/login");
 const experiencesRouter = require("./controllers/experiences");
@@ -21,6 +22,7 @@ mongoose.set("strictQuery", false);
 	}
 })();
 
+app.use(session());
 app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
