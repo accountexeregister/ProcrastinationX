@@ -37,8 +37,8 @@ usersRouter.get("/", async (request, response) => {
 });
 
 usersRouter.get("/:id", async (request, response) => {
-	const users = await User.findById(request.params.id).populate("experience");
-	response.json(users);
+	const user = await User.findById(request.params.id).populate("experience");
+	response.json(user);
 });
 
 usersRouter.delete("/logout", async (request, response, next) => {

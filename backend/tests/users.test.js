@@ -32,7 +32,7 @@ describe("when there is initially one user at db", () => {
 		const result = await api.get(`/api/users/${user._id}`);
 		expect(result.body).toEqual(user.toJSON());
 	});
-  
+
 	test("creation succeeds with a fresh username", async () => {
 		const usersAtStart = await helper.usersInDb();
 		const experiencesAtStart = await helper.experiencesInDb();
