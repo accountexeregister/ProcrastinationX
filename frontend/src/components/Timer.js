@@ -35,7 +35,9 @@ const Timer = ({user}) => {
     }
 
     const tick = () => {
-        timeElapsed.current++;
+        if (modeRef.current === "work") {
+            timeElapsed.current++;
+        }
         timeLeftRef.current--;
         setTimeLeft(timeLeftRef.current);
     }
@@ -43,28 +45,32 @@ const Timer = ({user}) => {
     useEffect(() => {
         startTimer();
         const intervalFunc = setInterval(async () => {
-            if (isPausedRef.current || timeElapsed.current >= 30) {
-                await userService.updateXp(user, timeElapsed.current);
-                timeElapsed.current = 0;
+            if (isPausedRef.current) {
+                console.log("Is Paused");
+                if (timeElapsed.current > 0) {
+                    await userService.updateXp(user, timeElapsed.current);
+                    timeElapsed.current = 0;
+                }
                 return;
             }
 
             if (timeLeftRef.current === 0) {
+                console.log("Timeleft current is 0")
                 await userService.updateXp(user, timeElapsed.current);
                 timeElapsed.current = 0;
                 return switchMode();
+            }
+
+            if (timeElapsed.current >= 30) {
+                console.log("Time elapsed more than 30");
+                await userService.updateXp(user, timeElapsed.current);
+                timeElapsed.current = 0;
             }
 
             tick();
         }, 1000);
         return () => clearInterval(intervalFunc);
     }, [settings]);
-
-    useEffect(() => {
-        if (isPaused) {
-
-        }
-    }, [isPaused]);
 
     const totalTime = mode === "work" 
     ? (settings.workMinutes * 60) + settings.workSeconds 
@@ -77,7 +83,7 @@ const Timer = ({user}) => {
         seconds = "0" + seconds;
     }
     return (
-        <div>
+        <div style={{marginTop: "10px"}}>
             <CircularProgressbar 
                 value={percentage} 
                 text={`${minutes}:${seconds}`}
@@ -91,8 +97,8 @@ const Timer = ({user}) => {
             />
             <div style={{marginTop: "20px"}}>
                 {isPaused 
-                ? <PlayButton onClick={() => { setIsPaused(false); isPausedRef.current = false; }}/> 
-                : <PauseButton onClick={() => { setIsPaused(true); isPausedRef.current = true; }} />}
+                ? <PlayButton onClick={() => { setIsPaused(false); isPausedRef.current = false;}}/> 
+                : <PauseButton onClick={() => { setIsPaused(true); isPausedRef.current = true;}} />}
             </div>
             <div style={{marginTop: "20px"}}>
                 <SettingsButton onClick={() => settings.setSettingsVisible(true)}/>

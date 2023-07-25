@@ -4,7 +4,6 @@ import userService from "../services/user";
 
 const Experience = ({ loggedUser }) => {
     const [user, setUser] = useState(loggedUser);
-    console.log(user);
     useEffect(() => {
         (async () => {
             const updatedUser = await userService.getUser(user);
@@ -16,6 +15,8 @@ const Experience = ({ loggedUser }) => {
         }, 60000);
     },
     []);
+
+    console.log(user.experience.currentXp);
 
     return (
         <>

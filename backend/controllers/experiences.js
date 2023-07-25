@@ -7,7 +7,7 @@ experiencesRouter.put("/:userid/:xp", async (request, response) => {
     if (!user) {
         return response.status(401).send({Error: "User not found"});
     }
-    const xpGained = request.params.xp;
+    const xpGained = Number(request.params.xp);
 
     let userExperience = await Experience.findById(user.experience);
     const previousUserExperience = {...userExperience.toObject()};

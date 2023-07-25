@@ -1,13 +1,21 @@
 import React from "react";
 
 const ProgressBar = ({ bgcolour, current, required }) => {
-    const completed = current / required;
+    const completed = current / required * 100;
     const containerStyles = {
         height: 20,
         width: '100%',
         backgroundColor: "#e0e0de",
         borderRadius: 50,
-        margin: 50,
+        margin: 0,
+      }
+
+      const belowContainerStyles = {
+        height: 20,
+        width: '100%',
+        backgroundColor: "grey",
+        marginTop: 5,
+        marginBelow: 25
       }
     
       const fillerStyles = {
@@ -25,11 +33,14 @@ const ProgressBar = ({ bgcolour, current, required }) => {
       }
     
       return (
-        <div style={containerStyles}>
-          <div>
-            <span style={labelStyles}>{`${current} / ${required}`}</span>
+        <div>
+          <div style={containerStyles}>
+            <div style={fillerStyles}>
+              <span style={labelStyles}>{`${Math.round(current / required * 10000) / 100}%`}</span>
+            </div>
           </div>
-          <div style={fillerStyles}>
+          <div style={belowContainerStyles}>
+          {`${current} / ${required}`}
           </div>
         </div>
       );
