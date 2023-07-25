@@ -31,6 +31,7 @@ const Login = ({ setUser, setIsLogin }) => {
           setUser(user);
           setUsername('');
           setPassword('');
+          setIsLogin(false);
 
         } catch (exception) {
           setErrorMessage('Wrong credentials');

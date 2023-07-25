@@ -29,6 +29,7 @@ const Register = ({ setIsRegister }) => {
           setUsername('');
           setName("");
           setPassword('');
+          setIsRegister(false);
 
         } catch (exception) {
           setErrorMessage('Invalid registration');

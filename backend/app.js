@@ -22,7 +22,11 @@ mongoose.set("strictQuery", false);
 	}
 })();
 
-app.use(session());
+app.use(session({
+    secret: process.env.SECRET,
+    resave: true,
+    saveUninitialized: true
+}));
 app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);

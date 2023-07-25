@@ -36,7 +36,7 @@ usersRouter.get("/", async (request, response) => {
 	response.json(users);
 });
 
-usersRouter.delete("/logout", (request, response, next) => {
+usersRouter.delete("/logout", async (request, response, next) => {
 	if (request.session) {
 	  request.session.destroy(err => {
 		if (err) {
