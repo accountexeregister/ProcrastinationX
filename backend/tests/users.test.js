@@ -16,6 +16,22 @@ describe("when there is initially one user at db", () => {
 	
 		await user.save();
 	});
+
+	test("find user by id", async () => {
+		const newUser = {
+			username: "mluukkai",
+			name: "Matti Luukkainen",
+			password: "salainen",
+		};
+		await api.post("/api/users")
+			.send(newUser);
+
+		const savedUser = await User.findOne({}).populate("experience");
+		const user = await User.findById(savedUser._id);
+
+		const result = await api.get(`/api/users/${user._id}`);
+		expect(result.body).toEqual(user.toJSON());
+	});
   
 	test("creation succeeds with a fresh username", async () => {
 		const usersAtStart = await helper.usersInDb();
