@@ -26,8 +26,10 @@ const ProgressBar = ({ bgcolour, current, required }) => {
     
       return (
         <div style={containerStyles}>
-          <div style={fillerStyles}>
+          <div>
             <span style={labelStyles}>{`${current} / ${required}`}</span>
+          </div>
+          <div style={fillerStyles}>
           </div>
         </div>
       );

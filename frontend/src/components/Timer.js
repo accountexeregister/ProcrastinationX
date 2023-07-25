@@ -43,20 +43,20 @@ const Timer = ({user}) => {
     useEffect(() => {
         startTimer();
         const intervalFunc = setInterval(async () => {
-            if (isPausedRef.current || timeElapsed.current >= 30000) {
-                await userService.updateXp(user, timeElapsed.current / 1000);
+            if (isPausedRef.current || timeElapsed.current >= 30) {
+                await userService.updateXp(user, timeElapsed.current);
                 timeElapsed.current = 0;
                 return;
             }
 
             if (timeLeftRef.current === 0) {
-                await userService.updateXp(user, timeElapsed.current / 1000);
+                await userService.updateXp(user, timeElapsed.current);
                 timeElapsed.current = 0;
                 return switchMode();
             }
 
             tick();
-        }, 1000)
+        }, 1000);
         return () => clearInterval(intervalFunc);
     }, [settings]);
 
