@@ -3,14 +3,14 @@ import Timer from "./Timer";
 import { useState } from "react";
 import SettingsContext from "./SettingsContext";
 
-const Main = () => {
+const Main = ({user}) => {
 
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [workMinutes, setWorkMinutes] = useState(45);
     const [workSeconds, setWorkSeconds] = useState(0);
     const [breakMinutes, setBreakMinutes] = useState(15);
     const [breakSeconds, setBreakSeconds] = useState(0);
-
+    
     return (
         <main>
             <SettingsContext.Provider value={{
@@ -25,7 +25,7 @@ const Main = () => {
                 settingsVisible,
                 setSettingsVisible,
             }}>
-                {settingsVisible ? <Settings/> : <Timer/>}
+                {settingsVisible ? <Settings/> : <Timer user={user}/>}
             </SettingsContext.Provider>
         </main>
     )

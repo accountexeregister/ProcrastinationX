@@ -1,9 +1,10 @@
 import axios from 'axios'
-const baseUrl = '/api/login'
+const baseUrl = '/api/users'
 
-const login = async credentials => {
-  const response = await axios.post(baseUrl, credentials)
-  return response.data
+const updateXp = async (user, xp) => {
+  const userId = user.token.id;
+  const response = await axios.put(`${baseUrl}/${userId}/${xp}`);
+  return response.data.after;
 }
 
-export default { login }
+export default { updateXp }

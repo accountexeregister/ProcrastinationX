@@ -30,7 +30,7 @@ const App = () => {
       {user && <div>Logged in as {user.username}</div>}
       {user && <Logout setUser={setUser}/>}
       {user && <Experience user={user} />} 
-      <Main />
+      <Main user={user}/>
       <button onClick={() => setIsLogin(true)}>
         Login
       </button>

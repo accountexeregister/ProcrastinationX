@@ -5,13 +5,15 @@ import PlayButton from './PlayButton';
 import SettingsButton from './SettingsButton';
 import { useState, useEffect, useContext, useRef } from 'react';
 import SettingsContext from './SettingsContext';
+import userService from "../services/user";
 
-const Timer = () => {
+const Timer = ({user}) => {
     const [isPaused, setIsPaused] = useState(true);
     const [mode, setMode] = useState("work"); // work/break/null
     const [timeLeft, setTimeLeft] = useState(0); // time in seconds
     const settings = useContext(SettingsContext);
 
+    const timeElapsed = useRef(0);
     const timeLeftRef = useRef(timeLeft);
     const isPausedRef = useRef(isPaused);
     const modeRef = useRef(mode);
@@ -33,18 +35,23 @@ const Timer = () => {
     }
 
     const tick = () => {
+        timeElapsed.current++;
         timeLeftRef.current--;
         setTimeLeft(timeLeftRef.current);
     }
 
     useEffect(() => {
         startTimer();
-        const intervalFunc = setInterval(() => {
-            if (isPausedRef.current) {
+        const intervalFunc = setInterval(async () => {
+            if (isPausedRef.current || timeElapsed.current >= 30) {
+                await userService.updateXp(user, timeElapsed.current);
+                timeElapsed.current = 0;
                 return;
             }
 
             if (timeLeftRef.current === 0) {
+                await userService.updateXp(user, timeElapsed.current);
+                timeElapsed.current = 0;
                 return switchMode();
             }
 
@@ -52,6 +59,12 @@ const Timer = () => {
         }, 1000)
         return () => clearInterval(intervalFunc);
     }, [settings]);
+
+    useEffect(() => {
+        if (isPaused) {
+
+        }
+    }, [isPaused]);
 
     const totalTime = mode === "work" 
     ? (settings.workMinutes * 60) + settings.workSeconds 
