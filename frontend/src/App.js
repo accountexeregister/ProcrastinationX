@@ -13,20 +13,21 @@ const App = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
 
+  const setUserFromDb = async (userJSON) => {
+    let user = JSON.parse(userJSON);
+    user = await userService.getUser(user);
+    setUser(user);
+  };
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedProcXUser");
     if (loggedUserJSON) {
-      (async() => {
-        let user = JSON.parse(loggedUserJSON);
-        user = await userService.getUser(user);
-        setUser(user);
-        }
-      )();
+      (async () => await setUserFromDb(loggedUserJSON))();
     }
   }, []);
 
   if (isLogin) {
-    return <Login setUser={setUser} setIsLogin={setIsLogin}/>;
+    return <Login setUser={setUser} setIsLogin={setIsLogin} setUserFromDb={setUserFromDb}/>;
   } else if (isRegister) {
     return <Register setIsRegister={setIsRegister}/>;
   } else {

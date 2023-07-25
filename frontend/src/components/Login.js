@@ -2,7 +2,7 @@ import loginService from "../services/login";
 import { useState } from "react";
 import LoginNotification from "../Notifications/LoginNotification";
 
-const Login = ({ setUser, setIsLogin }) => {
+const Login = ({ setUser, setIsLogin, setUserFromDb }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState(null);
@@ -22,13 +22,14 @@ const Login = ({ setUser, setIsLogin }) => {
         event.preventDefault()
         
         try {
-          let user = await loginService.login({
+          const user = await loginService.login({
             username, password,
           });
           window.localStorage.setItem(
             "loggedProcXUser", JSON.stringify(user)
           );
-          setUser(user);
+          const loggedUserJSON = window.localStorage.getItem("loggedProcXUser");
+          await setUserFromDb(loggedUserJSON);
           setUsername('');
           setPassword('');
           setIsLogin(false);

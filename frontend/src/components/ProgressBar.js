@@ -4,7 +4,7 @@ const ProgressBar = ({ bgcolour, current, required }) => {
     const completed = current / required;
     const containerStyles = {
         height: 20,
-        width: '85%',
+        width: '100%',
         backgroundColor: "#e0e0de",
         borderRadius: 50,
         margin: 50,
