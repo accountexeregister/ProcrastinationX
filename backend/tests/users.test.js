@@ -5,13 +5,15 @@ const Experience = require("../models/experience");
 const api = require("./setup_test");
 const helper = require("./test_helper");
 
+beforeEach(async () => {
+	await helper.beforeEachSetup();
+});
+
 describe("when there is initially one user at db", () => {
 	beforeEach(async () => {
-		await User.deleteMany({});
-		await Experience.deleteMany({});
 		const passwordHash = await bcrypt.hash("sekret", 10);
 		const user = new User({ username: "root", passwordHash });
-  
+	
 		await user.save();
 	});
   
@@ -76,6 +78,42 @@ describe("when there is initially one user at db", () => {
 		const usersAtEnd = await helper.usersInDb();
 		expect(usersAtEnd).toHaveLength(usersAtStart.length);
 	}, 500000000);
+});
+
+describe("User experience", () => {
+	beforeEach(async () => {
+		const newUser = {
+			username: "mluukkai",
+			name: "Matti Luukkainen",
+			password: "salainen",
+		};
+		await api.post("/api/users")
+			.send(newUser);
+	});
+
+	test("Update currentXp", async () => {  
+		const savedUser = await User.findOne({}).populate("experience");
+		const previousExperience = {
+			level: savedUser.experience.level,
+			currentXp: savedUser.experience.currentXp,
+			requiredXp: savedUser.experience.requiredXp
+		};
+
+		const result = await api
+			.put(`/api/users/${savedUser._id}/${150}`)
+			.expect(200)
+			.expect("Content-Type", /application\/json/);
+
+		expect(result.body).toEqual({
+			before: previousExperience,
+			after: {
+				level: previousExperience.level,
+				currentXp: previousExperience.currentXp + 150,
+				requiredXp: previousExperience.requiredXp
+			}
+		});
+	}, 50000);
+
 });
   
 afterAll(async () => {
