@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Login from './components/Login';
 import Register from './components/Register';
 import Main from './components/Main';
+import Logout from './components/Logout';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -26,6 +27,7 @@ const App = () => {
     return (
       <>
       {user && <div>Logged in as {user.username}</div>}
+      {user && <Logout setUser={setUser}/>}
       <Main />
       <button onClick={() => setIsLogin(true)}>
         Login
