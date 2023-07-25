@@ -114,6 +114,51 @@ describe("User experience", () => {
 		});
 	}, 50000);
 
+	test("Update currentXp to level up", async () => {  
+		const savedUser = await User.findOne({}).populate("experience");
+		const previousExperience = {
+			level: savedUser.experience.level,
+			currentXp: savedUser.experience.currentXp,
+			requiredXp: savedUser.experience.requiredXp
+		};
+
+		const result = await api
+			.put(`/api/users/${savedUser._id}/${300}`)
+			.expect(200)
+			.expect("Content-Type", /application\/json/);
+
+		expect(result.body).toEqual({
+			before: previousExperience,
+			after: {
+				level: previousExperience.level + 1,
+				currentXp: 0,
+				requiredXp: 300 * (previousExperience.level + 1)
+			}
+		});
+	}, 50000);
+
+	test("Skip few levels", async () => {  
+		const savedUser = await User.findOne({}).populate("experience");
+		const previousExperience = {
+			level: savedUser.experience.level,
+			currentXp: savedUser.experience.currentXp,
+			requiredXp: savedUser.experience.requiredXp
+		};
+
+		const result = await api
+			.put(`/api/users/${savedUser._id}/${950}`)
+			.expect(200)
+			.expect("Content-Type", /application\/json/);
+
+		expect(result.body).toEqual({
+			before: previousExperience,
+			after: {
+				level: previousExperience.level + 2,
+				currentXp: 50,
+				requiredXp: 300 * (previousExperience.level + 2)
+			}
+		});
+	}, 50000);
 });
   
 afterAll(async () => {

@@ -13,11 +13,11 @@ experiencesRouter.put("/:userid/:xp", async (request, response) => {
     const previousUserExperience = {...userExperience.toObject()};
     userExperience.currentXp = userExperience.currentXp + xpGained;
 
-    while (userExperience.currentXp > userExperience.requiredXp) {
-        const currentXp = userExperience.currentXp;
+    while (userExperience.currentXp >= userExperience.requiredXp) {
+        const currentRequiredXp = userExperience.requiredXp;
         userExperience.level++;
         userExperience.requiredXp = 300 * userExperience.level;
-        userExperience.currentXp -= currentXp;
+        userExperience.currentXp -= currentRequiredXp;
     } 
 
     await userExperience.save();
