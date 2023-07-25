@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Main from './components/Main';
 import Logout from './components/Logout';
+import Experience from './components/Experience';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -28,6 +29,7 @@ const App = () => {
       <>
       {user && <div>Logged in as {user.username}</div>}
       {user && <Logout setUser={setUser}/>}
+      {user && <Experience user={user} />} 
       <Main />
       <button onClick={() => setIsLogin(true)}>
         Login
