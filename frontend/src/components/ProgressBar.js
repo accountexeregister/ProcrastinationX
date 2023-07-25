@@ -1,6 +1,7 @@
 import React from "react";
 
-const ProgressBar = ({ bgcolour, level, completed }) => {
+const ProgressBar = ({ bgcolour, current, required }) => {
+    const completed = current / required;
     const containerStyles = {
         height: 20,
         width: '85%',
@@ -26,7 +27,7 @@ const ProgressBar = ({ bgcolour, level, completed }) => {
       return (
         <div style={containerStyles}>
           <div style={fillerStyles}>
-            <span style={labelStyles}>{`${150 / 300}`}</span>
+            <span style={labelStyles}>{`${current} / ${required}`}</span>
           </div>
         </div>
       );

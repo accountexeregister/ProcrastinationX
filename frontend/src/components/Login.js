@@ -22,7 +22,7 @@ const Login = ({ setUser, setIsLogin }) => {
         event.preventDefault()
         
         try {
-          const user = await loginService.login({
+          let user = await loginService.login({
             username, password,
           });
           window.localStorage.setItem(

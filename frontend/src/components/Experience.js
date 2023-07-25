@@ -3,7 +3,11 @@ import ProgressBar from "./ProgressBar";
 const Experience = ({ user }) => {
     return (
         <div>
-            Level: 1 <ProgressBar bgcolour={"green"} completed={50}/>
+            Level: {user.experience.level} 
+            <ProgressBar bgcolour={"green"} 
+                current={user.experience.currentXp} 
+                required={user.experience.requiredXp}
+            />
         </div>
     )
 };

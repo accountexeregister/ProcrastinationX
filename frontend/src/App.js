@@ -5,7 +5,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Main from './components/Main';
 import Logout from './components/Logout';
-import Experience from './components/Experience';
+import userService from "./services/user";
+
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -15,8 +16,12 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedProcXUser");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      (async() => {
+        let user = JSON.parse(loggedUserJSON);
+        user = await userService.getUser(user);
+        setUser(user);
+        }
+      )();
     }
   }, []);
 
@@ -29,8 +34,7 @@ const App = () => {
       <>
       {user && <div>Logged in as {user.username}</div>}
       {user && <Logout setUser={setUser}/>}
-      {user && <Experience user={user} />} 
-      <Main user={user}/>
+      {user && <Main loggedUser={user}/>}
       <button onClick={() => setIsLogin(true)}>
         Login
       </button>
