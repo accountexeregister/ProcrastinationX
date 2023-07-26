@@ -40,7 +40,7 @@ const ProgressBar = ({ bgcolour, current, required }) => {
             </div>
           </div>
           <div style={belowContainerStyles}>
-          {`${current} / ${required}`}
+          {`${Math.round(current * 100) / 100} / ${required}`}
           </div>
         </div>
       );
