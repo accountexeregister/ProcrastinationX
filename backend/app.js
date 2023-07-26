@@ -5,11 +5,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { log, errorLog } = require("./utils/logger");
 require("express-async-errors");
-const middleware = require("./utils/middleware");
 let session = require("express-session");
 const usersRouter = require("./controllers/users");
 const loginRouter = require("./controllers/login");
 const experiencesRouter = require("./controllers/experiences");
+const middleware = require("./utils/middleware");
 
 mongoose.set("strictQuery", false);
 
@@ -23,14 +23,16 @@ mongoose.set("strictQuery", false);
 })();
 
 app.use(session({
-    secret: process.env.SECRET,
-    resave: true,
-    saveUninitialized: true
+	secret: process.env.SECRET,
+	resave: true,
+	saveUninitialized: true
 }));
 app.use(cors());
+app.use(express.static("build"));
 app.use(express.json());
 app.use(middleware.requestLogger);
 app.use(middleware.userExtractor);
+
 
 app.use("/api/users", usersRouter, experiencesRouter);
 app.use("/api/login", loginRouter);
