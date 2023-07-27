@@ -2,7 +2,7 @@ const experiencesRouter = require("express").Router();
 const User = require("../models/user");
 const Experience = require("../models/experience");
 
-experiencesRouter.put("/:userid/:xp", async (request, response) => {
+experiencesRouter.put("/:userid/xp/:xp", async (request, response) => {
     const user = await User.findById(request.params.userid);
     if (!user) {
         return response.status(401).send({Error: "User not found"});

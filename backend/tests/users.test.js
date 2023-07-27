@@ -125,7 +125,7 @@ describe("User experience", () => {
 		};
 
 		const result = await api
-			.put(`/api/users/${savedUser._id}/${150}`)
+			.put(`/api/users/${savedUser._id}/xp/${150}`)
 			.expect(200)
 			.expect("Content-Type", /application\/json/);
 
@@ -148,7 +148,7 @@ describe("User experience", () => {
 		};
 
 		const result = await api
-			.put(`/api/users/${savedUser._id}/${300}`)
+			.put(`/api/users/${savedUser._id}/xp/${300}`)
 			.expect(200)
 			.expect("Content-Type", /application\/json/);
 
@@ -171,7 +171,7 @@ describe("User experience", () => {
 		};
 
 		const result = await api
-			.put(`/api/users/${savedUser._id}/${950}`)
+			.put(`/api/users/${savedUser._id}/xp/${950}`)
 			.expect(200)
 			.expect("Content-Type", /application\/json/);
 

@@ -12,18 +12,15 @@ settingsRouter.put("/:userid/settings/", async (request, response, next) => {
     
     let userSettings = await Settings.findById(user.settings);
     const previousUserSettings = {...userSettings.toObject()};
-    userSettings = {
-        ...userSettings,
-        workMinutes,
-        workSeconds,
-        breakMinutes,
-        breakSeconds
-    }
+    userSettings.workMinutes = workMinutes;
+    userSettings.workSeconds = workSeconds;
+    userSettings.breakMinutes = breakMinutes;
+    userSettings.breakSeconds = breakSeconds;
 
     try {
         await userSettings.save();
     } catch (error) {
-        next(error);
+        return next(error);
     }
 
     response.status(200).json({
