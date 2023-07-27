@@ -5,6 +5,7 @@ const Settings = require("../models/settings");
 const beforeEachSetup = async () => {
 	await User.deleteMany({});
 	await Experience.deleteMany({});
+	await Settings.deleteMany({});
 };
 
 const usersInDb = async () => {

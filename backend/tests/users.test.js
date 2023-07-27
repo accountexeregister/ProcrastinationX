@@ -34,8 +34,10 @@ describe("when there is initially one user at db", () => {
 	});
 
 	test("creation succeeds with a fresh username", async () => {
+		await helper.beforeEachSetup();
 		const usersAtStart = await helper.usersInDb();
 		const experiencesAtStart = await helper.experiencesInDb();
+		const settingsAtStart = await helper.settingsInDb();
   
 		const newUser = {
 			username: "mluukkai",
@@ -61,16 +63,23 @@ describe("when there is initially one user at db", () => {
 		expect(savedUser.experience.toString()).toBe(experiencesAtEnd[0].id);
 		expect(experiencesAtEnd[0].user.toString()).toBe(savedUser.id);
 
-		savedUser = await User.findById(savedUser.id).populate("experience");
-		const savedUserExperience = {
-			level: savedUser.experience.level,
-			currentXp: savedUser.experience.currentXp,
-			requiredXp: savedUser.experience.requiredXp
+		const settingsAtEnd = await helper.settingsInDb();
+		expect(settingsAtEnd).toHaveLength(settingsAtStart.length + 1);
+		expect(savedUser.settings.toString()).toBe(settingsAtEnd[0].id);
+		expect(settingsAtEnd[0].user.toString()).toBe(savedUser.id);
+
+		savedUser = await User.findById(savedUser.id).populate("experience").populate("settings");
+		const savedUserSettings = {
+			workMinutes: savedUser.settings.workMinutes,
+			workSeconds: savedUser.settings.workSeconds,
+			breakMinutes: savedUser.settings.breakMinutes,
+			breakSeconds: savedUser.settings.breakSeconds
 		};
-		expect(savedUserExperience).toEqual({
-			level: 1,
-			currentXp: 0,
-			requiredXp: 300,
+		expect(savedUserSettings).toEqual({
+			workMinutes: 25,
+			workSeconds: 0,
+			breakMinutes: 5,
+			breakSeconds: 0
 		});
 	}, 50000);
   

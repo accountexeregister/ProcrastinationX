@@ -20,7 +20,7 @@ const settingsSchema = new mongoose.Schema({
         required: true,
         min: 0,
         max: 120,
-        default: 25
+        default: 5
     },
     breakSeconds: {
         type: Number,

@@ -28,7 +28,7 @@ usersRouter.post("/", async (request, response) => {
 	const savedExperience = await experience.save();
 
 	// Settings with default values defined in ../models/settings.js
-	const settings = new Settings({});
+	const settings = new Settings({ user: savedUser._id });
 	const savedSettings = await settings.save();
 
 	savedUser.experience = savedExperience._id;
