@@ -2,6 +2,7 @@ const usersRouter = require("express").Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const Experience = require("../models/experience");
+const Settings = require("../models/settings");
 
 usersRouter.post("/", async (request, response) => {
 	const { username, name, password } = request.body;
@@ -26,7 +27,12 @@ usersRouter.post("/", async (request, response) => {
 
 	const savedExperience = await experience.save();
 
+	// Settings with default values defined in ../models/settings.js
+	const settings = new Settings({});
+	const savedSettings = await settings.save();
+
 	savedUser.experience = savedExperience._id;
+	savedUser.settings = savedSettings._id;
 	savedUser = await savedUser.save();
 	response.status(201).json(savedUser);
 });
