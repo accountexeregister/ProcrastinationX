@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Experience"
 	}
+	settings: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Settings"
+	}
 });
 
 userSchema.plugin(uniqueValidator);
