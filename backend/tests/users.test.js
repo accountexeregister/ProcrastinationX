@@ -137,6 +137,18 @@ describe("User experience", () => {
 				requiredXp: previousExperience.requiredXp
 			}
 		});
+
+		const updatedUser = await User.findById(savedUser._id.toString()).populate("experience");
+		const updatedUserExperience = {
+			level: updatedUser.experience.level,
+			currentXp: updatedUser.experience.currentXp,
+			requiredXp: updatedUser.experience.requiredXp
+		};
+		expect(updatedUserExperience).toEqual({
+			level: previousExperience.level,
+			currentXp: previousExperience.currentXp + 150,
+			requiredXp: previousExperience.requiredXp
+		});
 	}, 50000);
 
 	test("Update currentXp to level up", async () => {  
@@ -160,6 +172,18 @@ describe("User experience", () => {
 				requiredXp: 300 * (previousExperience.level + 1)
 			}
 		});
+
+		const updatedUser = await User.findById(savedUser._id.toString()).populate("experience");
+		const updatedUserExperience = {
+			level: updatedUser.experience.level,
+			currentXp: updatedUser.experience.currentXp,
+			requiredXp: updatedUser.experience.requiredXp
+		};
+		expect(updatedUserExperience).toEqual({
+			level: previousExperience.level + 1,
+			currentXp: 0,
+			requiredXp: 300 * (previousExperience.level + 1)
+		});
 	}, 50000);
 
 	test("Skip few levels", async () => {  
@@ -182,6 +206,18 @@ describe("User experience", () => {
 				currentXp: 50,
 				requiredXp: 300 * (previousExperience.level + 2)
 			}
+		});
+
+		const updatedUser = await User.findById(savedUser._id.toString()).populate("experience");
+		const updatedUserExperience = {
+			level: updatedUser.experience.level,
+			currentXp: updatedUser.experience.currentXp,
+			requiredXp: updatedUser.experience.requiredXp
+		};
+		expect(updatedUserExperience).toEqual({
+			level: previousExperience.level + 2,
+			currentXp: 50,
+			requiredXp: 300 * (previousExperience.level + 2)
 		});
 	}, 50000);
 });
@@ -223,6 +259,15 @@ describe("User settings", () => {
 			before: previousSettings,
 			after: updatedSettings
 		});
+
+		const updatedUser = await User.findById(savedUser._id.toString()).populate("settings");
+		const updatedUserSettings = {
+			workMinutes: updatedUser.settings.workMinutes,
+			workSeconds: updatedUser.settings.workSeconds,
+			breakMinutes: updatedUser.settings.breakMinutes,
+			breakSeconds: updatedUser.settings.breakSeconds
+		};
+		expect(updatedUserSettings).toEqual(updatedSettings);
 	}, 50000);
 
 	test("Update settings out of range", async () => {  
@@ -246,6 +291,15 @@ describe("User settings", () => {
 			.send(updatedSettings)
 			.expect(400)
 			.expect("Content-Type", /application\/json/);
+
+		const updatedUser = await User.findById(savedUser._id.toString()).populate("settings");
+		const updatedUserSettings = {
+			workMinutes: updatedUser.settings.workMinutes,
+			workSeconds: updatedUser.settings.workSeconds,
+			breakMinutes: updatedUser.settings.breakMinutes,
+			breakSeconds: updatedUser.settings.breakSeconds
+		};
+		expect(updatedUserSettings).toEqual(previousSettings);
 	}, 50000);
 });
   
