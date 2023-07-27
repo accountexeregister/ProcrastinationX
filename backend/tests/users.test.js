@@ -185,6 +185,69 @@ describe("User experience", () => {
 		});
 	}, 50000);
 });
+
+describe("User settings", () => {
+	beforeEach(async () => {
+		const newUser = {
+			username: "mluukkai",
+			name: "Matti Luukkainen",
+			password: "salainen",
+		};
+		await api.post("/api/users")
+			.send(newUser);
+	});
+
+	test("Update settings", async () => {  
+		const savedUser = await User.findOne({}).populate("settings");
+		const previousSettings = {
+			workMinutes: savedUser.settings.workMinutes,
+			workSeconds: savedUser.settings.workSeconds,
+			breakMinutes: savedUser.settings.breakMinutes,
+			breakSeconds: savedUser.settings.breakSeconds
+		};
+
+		const updatedSettings = {
+			workMinutes: 45,
+			workSeconds: 0,
+			breakMinutes: 0,
+			breakSeconds: 59
+		};
+
+		const result = await api
+			.put(`/api/users/${savedUser._id}/settings`)
+			.send(updatedSettings)
+			.expect(200)
+			.expect("Content-Type", /application\/json/);
+
+		expect(result.body).toEqual({
+			before: previousSettings,
+			after: updatedSettings
+		});
+	}, 50000);
+
+	test("Update settings out of range", async () => {  
+		const savedUser = await User.findOne({}).populate("settings");
+		const previousSettings = {
+			workMinutes: savedUser.settings.workMinutes,
+			workSeconds: savedUser.settings.workSeconds,
+			breakMinutes: savedUser.settings.breakMinutes,
+			breakSeconds: savedUser.settings.breakSeconds
+		};
+
+		const updatedSettings = {
+			workMinutes: 135,
+			workSeconds: 0,
+			breakMinutes: 200,
+			breakSeconds: 60
+		};
+
+		const result = await api
+			.put(`/api/users/${savedUser._id}/settings`)
+			.send(updatedSettings)
+			.expect(400)
+			.expect("Content-Type", /application\/json/);
+	}, 50000);
+});
   
 afterAll(async () => {
 	await mongoose.connection.close();
