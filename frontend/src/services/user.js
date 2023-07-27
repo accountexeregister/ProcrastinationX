@@ -9,7 +9,7 @@ const getUser = async (user) => {
 
 const updateXp = async (user, xp) => {
   const userId = user.id;
-  const response = await axios.put(`${baseUrl}/${userId}/${xp}`);
+  const response = await axios.put(`${baseUrl}/${userId}/xp/${xp}`);
   return response.data.after;
 }
 

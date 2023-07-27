@@ -24,3 +24,5 @@ yarn-error.log*
 Dockerfile
 fly.toml
 .dockerignore
+
+.vscode
