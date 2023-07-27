@@ -43,7 +43,7 @@ usersRouter.get("/", async (request, response) => {
 });
 
 usersRouter.get("/:id", async (request, response) => {
-	const user = await User.findById(request.params.id).populate("experience");
+	const user = await User.findById(request.params.id).populate("experience").populate("settings");
 	response.json(user);
 });
 

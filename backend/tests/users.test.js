@@ -26,7 +26,7 @@ describe("when there is initially one user at db", () => {
 		await api.post("/api/users")
 			.send(newUser);
 
-		const savedUser = await User.findOne({}).populate("experience");
+		const savedUser = await User.findOne({}).populate("experience").populate("settings");
 		const user = await User.findById(savedUser._id);
 
 		const result = await api.get(`/api/users/${user._id}`);
