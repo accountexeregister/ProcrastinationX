@@ -13,4 +13,11 @@ const updateXp = async (user, xp) => {
   return response.data.after;
 }
 
-export default { getUser, updateXp }
+const updateSettings = async (user, settings) => {
+  const userId = user.id;
+  const response = await axios.put(`${baseUrl}/${userId}/settings`,
+    settings);
+  return response.data.after;
+}
+
+export default { getUser, updateXp, updateSettings }

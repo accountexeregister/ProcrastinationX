@@ -17,7 +17,7 @@ const Settings = () => {
                 trackClassName={"track"}
                 value={settings.workMinutes}
                 onChange={newVal => settings.setWorkMinutes(newVal)}
-                min={1}
+                min={0}
                 max={120}
             />
             <ReactSlider
@@ -36,7 +36,7 @@ const Settings = () => {
                 trackClassName={"track"}
                 value={settings.breakMinutes}
                 onChange={newVal => settings.setBreakMinutes(newVal)}
-                min={1}
+                min={0}
                 max={120}
             />
             <ReactSlider
@@ -49,7 +49,12 @@ const Settings = () => {
                 max={59}
             />
             <div style={{textAlign: "center", marginTop: "20px"}}>
-                <BackButton onClick={() => settings.setSettingsVisible(false)}/>
+                <BackButton onClick={async () => await settings.updateSettings(
+                    settings.workMinutes,
+                    settings.workSeconds,
+                    settings.breakMinutes,
+                    settings.breakSeconds
+                )}/>
             </div>
         </div>
     )

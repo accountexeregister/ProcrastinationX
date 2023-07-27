@@ -3,15 +3,28 @@ import Timer from "./Timer";
 import { useState, useEffect } from "react";
 import SettingsContext from "./SettingsContext";
 import Experience from "./Experience";
+import userService from "../services/user";
 
 const Main = ({ loggedUser }) => {
     const [user, setUser] = useState(loggedUser);
     const [settingsVisible, setSettingsVisible] = useState(false);
-    const [workMinutes, setWorkMinutes] = useState(25);
-    const [workSeconds, setWorkSeconds] = useState(0);
-    const [breakMinutes, setBreakMinutes] = useState(5);
-    const [breakSeconds, setBreakSeconds] = useState(0);
-        
+    const [workMinutes, setWorkMinutes] = useState(user.settings.workMinutes);
+    const [workSeconds, setWorkSeconds] = useState(user.settings.workSeconds);
+    const [breakMinutes, setBreakMinutes] = useState(user.settings.breakMinutes);
+    const [breakSeconds, setBreakSeconds] = useState(user.settings.breakSeconds);
+    
+    // Updates settings after returning to main menu
+    const updateSettings = async (workMinutes, workSeconds, breakMinutes, breakSeconds) => {
+        const settings = {
+            workMinutes,
+            workSeconds,
+            breakMinutes,
+            breakSeconds
+        };
+        await userService.updateSettings(user, settings);
+        setSettingsVisible(false);
+    }
+
     console.log(user);
 
     return (
@@ -27,6 +40,7 @@ const Main = ({ loggedUser }) => {
                 setBreakSeconds,
                 settingsVisible,
                 setSettingsVisible,
+                updateSettings
             }}>
             <Experience loggedUser={user}/>
                 {settingsVisible ? <Settings/> : <Timer user={user}/>}
