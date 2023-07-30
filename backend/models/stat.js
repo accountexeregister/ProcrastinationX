@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
 const statSchema = new mongoose.Schema({
-	totalHoursWorked: {
+	totalSecondsWorked: {
         type: Number,
         required: true,
         min: 0,
         default: 0
     },
-    totalHoursBreak: {
+    totalSecondsBreak: {
         type: Number,
         required: true,
         min: 0,

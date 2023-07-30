@@ -2,17 +2,17 @@ const statsRouter = require("express").Router();
 const User = require("../models/user");
 const Stat = require("../models/stat");
 
-statsRouter.put("/:userid/stats/work/:min", async (request, response, next) => {
+statsRouter.put("/:userid/stats/work/:sec", async (request, response, next) => {
     const user = await User.findById(request.params.userid);
     if (!user) {
         return response.status(401).send({Error: "User not found"});
     }
 
-    const minutes = Number(request.params.min);
+    const sec = Number(request.params.sec);
     
     let userStats = await Stat.findById(user.stats);
     const previousUserStats = {...userStats.toObject()};
-    userStats.totalHoursWorked += 0.0166667 * minutes;
+    userStats.totalSecondsWorked += sec;
 
     try {
         await userStats.save();
@@ -22,25 +22,25 @@ statsRouter.put("/:userid/stats/work/:min", async (request, response, next) => {
 
     response.status(200).json({
         before: {
-            totalHoursWorked: previousUserStats.totalHoursWorked,
+            totalSecondsWorked: previousUserStats.totalSecondsWorked,
         },
         after: {
-            totalHoursWorked: userStats.totalHoursWorked,
+            totalSecondsWorked: userStats.totalSecondsWorked,
         }
     });
 });
 
-statsRouter.put("/:userid/stats/break/:min", async (request, response, next) => {
+statsRouter.put("/:userid/stats/break/:sec", async (request, response, next) => {
     const user = await User.findById(request.params.userid);
     if (!user) {
         return response.status(401).send({Error: "User not found"});
     }
 
-    const minutes = Number(request.params.min);
+    const sec = Number(request.params.sec);
     
     let userStats = await Stat.findById(user.stats);
     const previousUserStats = {...userStats.toObject()};
-    userStats.totalHoursBreak += 0.0166667 * minutes;
+    userStats.totalSecondsBreak += sec;
 
     try {
         await userStats.save();
@@ -50,10 +50,10 @@ statsRouter.put("/:userid/stats/break/:min", async (request, response, next) => 
 
     response.status(200).json({
         before: {
-            totalHoursBreak: previousUserStats.totalHoursBreak,
+            totalSecondsBreak: previousUserStats.totalSecondsBreak,
         },
         after: {
-            totalHoursBreak: userStats.totalHoursBreak,
+            totalSecondsBreak: userStats.totalSecondsBreak,
         }
     });
 });

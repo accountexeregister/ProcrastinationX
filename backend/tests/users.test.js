@@ -84,13 +84,13 @@ describe("when there is initially one user at db", () => {
 		});
 
 		const savedUserStats = {
-			totalHoursWorked: savedUser.stats.totalHoursWorked,
-			totalHoursBreak: savedUser.stats.totalHoursBreak,
+			totalSecondsWorked: savedUser.stats.totalSecondsWorked,
+			totalSecondsBreak: savedUser.stats.totalSecondsBreak,
 			totalXp: savedUser.stats.totalXp,
 		};
 		expect(savedUserStats).toEqual({
-			totalHoursWorked: 0,
-			totalHoursBreak: 0,
+			totalSecondsWorked: 0,
+			totalSecondsBreak: 0,
 			totalXp: 0,
 		});
 	}, 50000);
@@ -324,6 +324,72 @@ describe("User settings", () => {
 			breakSeconds: updatedUser.settings.breakSeconds
 		};
 		expect(updatedUserSettings).toEqual(previousSettings);
+	}, 50000);
+});
+
+describe("User stats", () => {
+	beforeEach(async () => {
+		const newUser = {
+			username: "mluukkai",
+			name: "Matti Luukkainen",
+			password: "salainen",
+		};
+		await api.post("/api/users")
+			.send(newUser);
+	});
+
+	test("Update totalWorkSeconds", async () => {  
+		const savedUser = await User.findOne({}).populate("stats");
+		const previousStats = {
+			totalSecondsWorked: savedUser.stats.totalSecondsWorked,
+		};
+
+		const result = await api
+			.put(`/api/users/${savedUser._id}/stats/work/${350}`)
+			.expect(200)
+			.expect("Content-Type", /application\/json/);
+
+		expect(result.body).toEqual({
+			before: previousStats,
+			after: {
+				totalSecondsWorked: previousStats.totalSecondsWorked + 350,
+			}
+		});
+
+		const updatedUser = await User.findById(savedUser._id.toString()).populate("stats");
+		const updatedUserStats = {
+			totalSecondsWorked: updatedUser.stats.totalSecondsWorked
+		};
+		expect(updatedUserStats).toEqual({
+			totalSecondsWorked: previousStats.totalSecondsWorked + 350
+		});
+	}, 50000);
+
+	test("Update totalBreakSeconds", async () => {  
+		const savedUser = await User.findOne({}).populate("stats");
+		const previousStats = {
+			totalSecondsBreak: savedUser.stats.totalSecondsBreak,
+		};
+
+		const result = await api
+			.put(`/api/users/${savedUser._id}/stats/break/${355}`)
+			.expect(200)
+			.expect("Content-Type", /application\/json/);
+
+		expect(result.body).toEqual({
+			before: previousStats,
+			after: {
+				totalSecondsBreak: previousStats.totalSecondsBreak + 355,
+			}
+		});
+
+		const updatedUser = await User.findById(savedUser._id.toString()).populate("stats");
+		const updatedUserStats = {
+			totalSecondsBreak: updatedUser.stats.totalSecondsBreak
+		};
+		expect(updatedUserStats).toEqual({
+			totalSecondsBreak: previousStats.totalSecondsBreak + 355
+		});
 	}, 50000);
 });
   
