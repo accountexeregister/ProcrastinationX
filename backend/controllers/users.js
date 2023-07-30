@@ -44,12 +44,12 @@ usersRouter.post("/", async (request, response) => {
 });
 
 usersRouter.get("/", async (request, response) => {
-	const users = await User.find({});
+	const users = await User.find({}).populate("experience").populate("settings").populate("stats");
 	response.json(users);
 });
 
 usersRouter.get("/:id", async (request, response) => {
-	const user = await User.findById(request.params.id).populate("experience").populate("settings");
+	const user = await User.findById(request.params.id).populate("experience").populate("settings").populate("stats");
 	response.json(user);
 });
 
