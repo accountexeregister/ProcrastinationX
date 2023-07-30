@@ -36,4 +36,9 @@ const updateSettings = async (user, settings) => {
   return response.data.after;
 }
 
-export default { getUser, updateXp, updateSettings, updateWork, updateBreak }
+const getStats = async (user) => {
+  const userId = user.id;
+  const response = await await axios.get(`${baseUrl}/${userId}/stats`);
+}
+
+export default { getUser, updateXp, updateSettings, updateWork, updateBreak, getStats }

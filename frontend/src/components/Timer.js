@@ -3,6 +3,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import PauseButton from './PauseButton';
 import PlayButton from './PlayButton';
 import SettingsButton from './SettingsButton';
+import StatsButton from './StatsButton';
 import { useState, useEffect, useContext, useRef } from 'react';
 import SettingsContext from './SettingsContext';
 import userService from "../services/user";
@@ -114,6 +115,9 @@ const Timer = ({user}) => {
             </div>
             <div style={{marginTop: "20px"}}>
                 <SettingsButton onClick={() => settings.setSettingsVisible(true)}/>
+            </div>
+            <div style={{marginTop: "20px"}}>
+                <StatsButton onClick={() => settings.setStatsVisible(true)}/>
             </div>
         </div>
     )

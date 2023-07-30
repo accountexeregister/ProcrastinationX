@@ -1,4 +1,5 @@
 import Settings from "./Settings";
+import Stats from "./Stats";
 import Timer from "./Timer";
 import { useState, useEffect } from "react";
 import SettingsContext from "./SettingsContext";
@@ -8,6 +9,7 @@ import userService from "../services/user";
 const Main = ({ loggedUser }) => {
     const [user, setUser] = useState(loggedUser);
     const [settingsVisible, setSettingsVisible] = useState(false);
+    const [statsVisible, setStatsVisible] = useState(false);
     const [workMinutes, setWorkMinutes] = useState(user.settings.workMinutes);
     const [workSeconds, setWorkSeconds] = useState(user.settings.workSeconds);
     const [breakMinutes, setBreakMinutes] = useState(user.settings.breakMinutes);
@@ -40,10 +42,12 @@ const Main = ({ loggedUser }) => {
                 setBreakSeconds,
                 settingsVisible,
                 setSettingsVisible,
-                updateSettings
+                updateSettings,
+                setStatsVisible
             }}>
             <Experience loggedUser={user}/>
                 {settingsVisible ? <Settings/> : <Timer user={user}/>}
+                {statsVisible ? <Stats user={user}/> : <Timer user={user}/>}
             </SettingsContext.Provider>
         </main>
     )
