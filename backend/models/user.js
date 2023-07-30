@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
 	settings: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Settings"
+	},
+	stats: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Stat"
 	}
 });
 

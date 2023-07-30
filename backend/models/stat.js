@@ -1,9 +1,24 @@
 const mongoose = require("mongoose");
 
 const statSchema = new mongoose.Schema({
-	totalHoursWorked: Number,
-    totalHoursBreak: Number,
-	totalXp: Number,
+	totalHoursWorked: {
+        type: Number,
+        required: true,
+        min: 0,
+        default: 25
+    },
+    totalHoursBreak: {
+        type: Number,
+        required: true,
+        min: 0,
+        default: 25
+    },
+	totalXp: {
+        type: Number,
+        required: true,
+        min: 0,
+        default: 25
+    },
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User"
@@ -18,6 +33,6 @@ statSchema.set("toJSON", {
 	}
 });
 
-const Stat = mongoose.model("Experience", statSchema);
+const Stat = mongoose.model("Stat", statSchema);
   
 module.exports = Stat;
