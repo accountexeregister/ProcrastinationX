@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const Experience = require("../models/experience");
 const Settings = require("../models/settings");
+const Stat = require("../models/stat");
 
 usersRouter.post("/", async (request, response) => {
 	const { username, name, password } = request.body;
@@ -31,8 +32,13 @@ usersRouter.post("/", async (request, response) => {
 	const settings = new Settings({ user: savedUser._id });
 	const savedSettings = await settings.save();
 
+	// Stats with default values defined in ../models/stats.js
+	const stats = new Stat({ user: savedUser._id });
+	const savedStats = await stats.save();
+
 	savedUser.experience = savedExperience._id;
 	savedUser.settings = savedSettings._id;
+	savedUser.stats = savedStats._id;
 	savedUser = await savedUser.save();
 	response.status(201).json(savedUser);
 });
