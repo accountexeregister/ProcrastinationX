@@ -13,6 +13,22 @@ const updateXp = async (user, xp) => {
   return response.data.after;
 }
 
+const updateWork = async(user, time, xp) => {
+  const userId = user.id;
+  const response = await axios.put(`${baseUrl}/${userId}/stats/work/${time}`);
+  const xpResponseAfter = await updateXp(user, xp);
+  return {
+    ...response.data.after,
+    ...xpResponseAfter
+  }
+}
+
+const updateBreak = async (user, time) => {
+  const userId = user.id;
+  const response = await axios.put(`${baseUrl}/${userId}/stats/break/${time}`);
+  return response.data.after;
+}
+
 const updateSettings = async (user, settings) => {
   const userId = user.id;
   const response = await axios.put(`${baseUrl}/${userId}/settings`,
@@ -20,4 +36,4 @@ const updateSettings = async (user, settings) => {
   return response.data.after;
 }
 
-export default { getUser, updateXp, updateSettings }
+export default { getUser, updateXp, updateSettings, updateWork, updateBreak }
