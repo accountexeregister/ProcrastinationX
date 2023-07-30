@@ -13,10 +13,10 @@ const updateXp = async (user, xp) => {
   return response.data.after;
 }
 
-const updateWork = async(user, time, xp) => {
+const updateWork = async(user, time) => {
   const userId = user.id;
   const response = await axios.put(`${baseUrl}/${userId}/stats/work/${time}`);
-  const xpResponseAfter = await updateXp(user, xp);
+  const xpResponseAfter = await updateXp(user, time);
   return {
     ...response.data.after,
     ...xpResponseAfter

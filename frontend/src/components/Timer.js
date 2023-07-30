@@ -13,7 +13,8 @@ const Timer = ({user}) => {
     const [timeLeft, setTimeLeft] = useState(0); // time in seconds
     const settings = useContext(SettingsContext);
 
-    const timeElapsed = useRef(0);
+    const workTimeElapsed = useRef(0);
+    const breakTimeElapsed = useRef(0);
     const timeLeftRef = useRef(timeLeft);
     const isPausedRef = useRef(isPaused);
     const modeRef = useRef(mode);
@@ -36,7 +37,9 @@ const Timer = ({user}) => {
 
     const tick = () => {
         if (modeRef.current === "work") {
-            timeElapsed.current++;
+            workTimeElapsed.current++;
+        } else {
+            breakTimeElapsed.current++;
         }
         timeLeftRef.current--;
         setTimeLeft(timeLeftRef.current);
@@ -47,24 +50,33 @@ const Timer = ({user}) => {
         const intervalFunc = setInterval(async () => {
             if (isPausedRef.current) {
                 console.log("Is Paused");
-                if (timeElapsed.current > 0) {
-                    await userService.updateXp(user, timeElapsed.current);
-                    timeElapsed.current = 0;
+                if (workTimeElapsed.current > 0) {
+                    await userService.updateWork(user, workTimeElapsed.current);
+                    workTimeElapsed.current = 0;
                 }
+
                 return;
             }
 
             if (timeLeftRef.current === 0) {
                 console.log("Timeleft current is 0")
-                await userService.updateXp(user, timeElapsed.current);
-                timeElapsed.current = 0;
+                await userService.updateWork(user, workTimeElapsed.current);
+                await userService.updateBreak(user, breakTimeElapsed.current);
+                workTimeElapsed.current = 0;
+                breakTimeElapsed.current = 0;
                 return switchMode();
             }
 
-            if (timeElapsed.current >= 30) {
-                console.log("Time elapsed more than 30");
-                await userService.updateXp(user, timeElapsed.current);
-                timeElapsed.current = 0;
+            if (workTimeElapsed.current >= 30) {
+                console.log("Work Time elapsed more than 30");
+                await userService.updateWork(user, workTimeElapsed.current);
+                workTimeElapsed.current = 0;
+            }
+
+            if (breakTimeElapsed.current >= 30) {
+                console.log("Break Time elapsed more than 30");
+                await userService.updateBreak(user, breakTimeElapsed.current);
+                breakTimeElapsed.current = 0;
             }
 
             tick();
