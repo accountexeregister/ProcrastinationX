@@ -10,6 +10,7 @@ const usersRouter = require("./controllers/users");
 const loginRouter = require("./controllers/login");
 const experiencesRouter = require("./controllers/experiences");
 const settingsRouter = require("./controllers/settings");
+const statsRouter = require("./controllers/stats");
 const middleware = require("./utils/middleware");
 
 mongoose.set("strictQuery", false);
@@ -35,7 +36,7 @@ app.use(middleware.requestLogger);
 app.use(middleware.userExtractor);
 
 
-app.use("/api/users", usersRouter, experiencesRouter, settingsRouter);
+app.use("/api/users", usersRouter, experiencesRouter, settingsRouter, statsRouter);
 app.use("/api/login", loginRouter);
 
 app.use(middleware.unknownEndpoint);

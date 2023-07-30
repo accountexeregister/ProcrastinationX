@@ -68,7 +68,8 @@ describe("when there is initially one user at db", () => {
 		expect(savedUser.settings.toString()).toBe(settingsAtEnd[0].id);
 		expect(settingsAtEnd[0].user.toString()).toBe(savedUser.id);
 
-		savedUser = await User.findById(savedUser.id).populate("experience").populate("settings");
+		savedUser = await User.findById(savedUser.id).populate("experience").populate("settings").populate("stat");
+
 		const savedUserSettings = {
 			workMinutes: savedUser.settings.workMinutes,
 			workSeconds: savedUser.settings.workSeconds,
@@ -80,6 +81,17 @@ describe("when there is initially one user at db", () => {
 			workSeconds: 0,
 			breakMinutes: 5,
 			breakSeconds: 0
+		});
+
+		const savedUserStats = {
+			totalHoursWorked: savedUser.stats.totalHoursWorked,
+			totalHoursBreak: savedUser.stats.totalHoursBreak,
+			totalXp: savedUser.stats.totalXp,
+		};
+		expect(savedUserStats).toEqual({
+			totalHoursWorked: 0,
+			totalHoursBreak: 0,
+			totalXp: 0,
 		});
 	}, 50000);
   
@@ -117,11 +129,12 @@ describe("User experience", () => {
 	});
 
 	test("Update currentXp", async () => {  
-		const savedUser = await User.findOne({}).populate("experience");
+		const savedUser = await User.findOne({}).populate("experience").populate("stat");
 		const previousExperience = {
 			level: savedUser.experience.level,
 			currentXp: savedUser.experience.currentXp,
-			requiredXp: savedUser.experience.requiredXp
+			requiredXp: savedUser.experience.requiredXp,
+			totalXp: savedUser.stats.totalXp
 		};
 
 		const result = await api
@@ -134,29 +147,33 @@ describe("User experience", () => {
 			after: {
 				level: previousExperience.level,
 				currentXp: previousExperience.currentXp + 150,
-				requiredXp: previousExperience.requiredXp
+				requiredXp: previousExperience.requiredXp,
+				totalXp: previousExperience.totalXp + 150
 			}
 		});
 
-		const updatedUser = await User.findById(savedUser._id.toString()).populate("experience");
+		const updatedUser = await User.findById(savedUser._id.toString()).populate("experience").populate("stat");
 		const updatedUserExperience = {
 			level: updatedUser.experience.level,
 			currentXp: updatedUser.experience.currentXp,
-			requiredXp: updatedUser.experience.requiredXp
+			requiredXp: updatedUser.experience.requiredXp,
+			totalXp: updatedUser.stats.totalXp
 		};
 		expect(updatedUserExperience).toEqual({
 			level: previousExperience.level,
 			currentXp: previousExperience.currentXp + 150,
-			requiredXp: previousExperience.requiredXp
+			requiredXp: previousExperience.requiredXp,
+			totalXp: previousExperience.currentXp + 150
 		});
 	}, 50000);
 
 	test("Update currentXp to level up", async () => {  
-		const savedUser = await User.findOne({}).populate("experience");
+		const savedUser = await User.findOne({}).populate("experience").populate("stat");
 		const previousExperience = {
 			level: savedUser.experience.level,
 			currentXp: savedUser.experience.currentXp,
-			requiredXp: savedUser.experience.requiredXp
+			requiredXp: savedUser.experience.requiredXp,
+			totalXp: savedUser.stats.totalXp
 		};
 
 		const result = await api
@@ -169,29 +186,33 @@ describe("User experience", () => {
 			after: {
 				level: previousExperience.level + 1,
 				currentXp: 0,
-				requiredXp: 300 * (previousExperience.level + 1)
+				requiredXp: 300 * (previousExperience.level + 1),
+				totalXp: previousExperience.totalXp + 300
 			}
 		});
 
-		const updatedUser = await User.findById(savedUser._id.toString()).populate("experience");
+		const updatedUser = await User.findById(savedUser._id.toString()).populate("experience").populate("stat");
 		const updatedUserExperience = {
 			level: updatedUser.experience.level,
 			currentXp: updatedUser.experience.currentXp,
-			requiredXp: updatedUser.experience.requiredXp
+			requiredXp: updatedUser.experience.requiredXp,
+			totalXp: updatedUser.stats.totalXp
 		};
 		expect(updatedUserExperience).toEqual({
 			level: previousExperience.level + 1,
 			currentXp: 0,
-			requiredXp: 300 * (previousExperience.level + 1)
+			requiredXp: 300 * (previousExperience.level + 1),
+			totalXp: previousExperience.totalXp + 300
 		});
 	}, 50000);
 
 	test("Skip few levels", async () => {  
-		const savedUser = await User.findOne({}).populate("experience");
+		const savedUser = await User.findOne({}).populate("experience").populate("stat");
 		const previousExperience = {
 			level: savedUser.experience.level,
 			currentXp: savedUser.experience.currentXp,
-			requiredXp: savedUser.experience.requiredXp
+			requiredXp: savedUser.experience.requiredXp,
+			totalXp: savedUser.stats.totalXp
 		};
 
 		const result = await api
@@ -204,20 +225,23 @@ describe("User experience", () => {
 			after: {
 				level: previousExperience.level + 2,
 				currentXp: 50,
-				requiredXp: 300 * (previousExperience.level + 2)
+				requiredXp: 300 * (previousExperience.level + 2),
+				totalXp: previousExperience.totalXp + 950
 			}
 		});
 
-		const updatedUser = await User.findById(savedUser._id.toString()).populate("experience");
+		const updatedUser = await User.findById(savedUser._id.toString()).populate("experience").populate("stat");
 		const updatedUserExperience = {
 			level: updatedUser.experience.level,
 			currentXp: updatedUser.experience.currentXp,
-			requiredXp: updatedUser.experience.requiredXp
+			requiredXp: updatedUser.experience.requiredXp,
+			totalXp: updatedUser.stats.totalXp
 		};
 		expect(updatedUserExperience).toEqual({
 			level: previousExperience.level + 2,
 			currentXp: 50,
-			requiredXp: 300 * (previousExperience.level + 2)
+			requiredXp: 300 * (previousExperience.level + 2),
+			totalXp: previousExperience.totalXp + 950
 		});
 	}, 50000);
 });
