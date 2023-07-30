@@ -46,8 +46,7 @@ const Main = ({ loggedUser }) => {
                 setStatsVisible
             }}>
             <Experience loggedUser={user}/>
-                {settingsVisible ? <Settings/> : <Timer user={user}/>}
-                {statsVisible ? <Stats user={user}/> : <Timer user={user}/>}
+                {settingsVisible ? <Settings/> : statsVisible ? <Stats user={user}/> : <Timer user={user}/>}
             </SettingsContext.Provider>
         </main>
     )

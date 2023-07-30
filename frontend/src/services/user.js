@@ -38,7 +38,8 @@ const updateSettings = async (user, settings) => {
 
 const getStats = async (user) => {
   const userId = user.id;
-  const response = await await axios.get(`${baseUrl}/${userId}/stats`);
+  const response = await axios.get(`${baseUrl}/${userId}/stats`);
+  return response.data;
 }
 
 export default { getUser, updateXp, updateSettings, updateWork, updateBreak, getStats }
