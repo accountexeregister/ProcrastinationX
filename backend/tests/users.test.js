@@ -338,6 +338,26 @@ describe("User stats", () => {
 			.send(newUser);
 	});
 
+	test("Get stats for user", async () => {
+		const savedUser = await User.findOne({}).populate("stats");
+		const user = await User.findById(savedUser._id).populate("stats");
+
+		const result = await api.get(`/api/users/${user._id}/stats`);
+		const resultBody = {
+			totalSecondsWorked: result.body.totalSecondsWorked,
+			totalSecondsBreak: result.body.totalSecondsBreak,
+			totalXp: result.body.totalXp
+		};
+
+		const userStats = {
+			totalSecondsWorked: user.stats.totalSecondsWorked,
+			totalSecondsBreak: user.stats.totalSecondsBreak,
+			totalXp: user.stats.totalXp
+		};
+
+		expect(resultBody).toEqual(userStats);
+	});
+
 	test("Update totalWorkSeconds", async () => {  
 		const savedUser = await User.findOne({}).populate("stats");
 		const previousStats = {

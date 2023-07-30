@@ -2,6 +2,11 @@ const statsRouter = require("express").Router();
 const User = require("../models/user");
 const Stat = require("../models/stat");
 
+statsRouter.get("/:userid/stats", async (request, response) => {
+	const user = await User.findById(request.params.userid).populate("stats");
+	response.json(user.stats);
+});
+
 statsRouter.put("/:userid/stats/work/:sec", async (request, response, next) => {
     const user = await User.findById(request.params.userid);
     if (!user) {
