@@ -5,19 +5,19 @@ const statSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 0,
-        default: 25
+        default: 0
     },
     totalHoursBreak: {
         type: Number,
         required: true,
         min: 0,
-        default: 25
+        default: 0
     },
 	totalXp: {
         type: Number,
         required: true,
         min: 0,
-        default: 25
+        default: 0
     },
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
